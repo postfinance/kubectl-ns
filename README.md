@@ -14,7 +14,7 @@ For further information, see the offical documentation on plugins [here](https:/
 
 # Compatibility
 Known to work on Windows and Linux. Requires kubectl >= 1.12 (tested with 1.12).
-Supports the oidc auth provider for authentication against the k8s api server.
+Supports the oidc, gcp and azure auth provider for authentication against the k8s api server.
 
 # Examples
 ## display namespaces
