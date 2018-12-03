@@ -125,6 +125,10 @@ func (o *NsOptions) Validate() error {
 func (o *NsOptions) Run() error {
 	selected := []string{}
 	for _, ns := range o.namespaces.Items {
+		if ns.GetName() == o.userSpecifiedNamespace {
+			selected = []string{ns.GetName()}
+			break
+		}
 		if strings.Contains(ns.GetName(), o.userSpecifiedNamespace) {
 			selected = append(selected, ns.GetName())
 		}
