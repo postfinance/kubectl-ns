@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/fatih/color"
 	"github.com/pkg/errors"
@@ -25,7 +26,7 @@ var (
 	# view the current namespace from your KUBECONFIG alongside all available namespaces
 	kubectl ns
 
-	# switch namespace to foo
+	# switch the namespace to foo if foo selects exactly one namespace, otherwise print a filtered list
 	kubectl ns foo`
 )
 
@@ -122,38 +123,33 @@ func (o *NsOptions) Validate() error {
 // Run lists all available namespaces, or updates the current namesapce
 // based on a provided namespace.
 func (o *NsOptions) Run() error {
-	if len(o.userSpecifiedNamespace) > 0 {
-		if err := o.changeCurrentNs(); err != nil {
-			return err
+	selected := []string{}
+	for _, ns := range o.namespaces.Items {
+		if ns.GetName() == o.userSpecifiedNamespace {
+			selected = []string{ns.GetName()}
+			break
 		}
-	} else {
-		if err := o.printNamespaces(); err != nil {
-			return err
+		if strings.Contains(ns.GetName(), o.userSpecifiedNamespace) {
+			selected = append(selected, ns.GetName())
 		}
 	}
-	return nil
+	switch len(selected) {
+	case 0:
+		return fmt.Errorf("can't change namespace, \"%s\" does not exist", o.userSpecifiedNamespace)
+	case 1:
+		return o.changeCurrentNs(selected[0])
+	}
+	return o.printNamespaces(selected)
 }
 
-func (o *NsOptions) changeCurrentNs() error {
+func (o *NsOptions) changeCurrentNs(newNS string) error {
 	if err := o.checkContext(); err != nil {
 		return err
 	}
 
 	currentNs := o.rawConfig.Contexts[o.rawConfig.CurrentContext].Namespace
-	newNS := o.userSpecifiedNamespace
 
 	if currentNs != newNS {
-		var found bool
-		for _, ns := range o.namespaces.Items {
-			if ns.GetName() == newNS {
-				found = true
-				break
-			}
-		}
-
-		if !found {
-			return fmt.Errorf("can't change namespace, \"%s\" does not exist", newNS)
-		}
 
 		o.rawConfig.Contexts[o.rawConfig.CurrentContext].Namespace = newNS
 		if err := clientcmd.ModifyConfig(clientcmd.NewDefaultPathOptions(),
@@ -166,7 +162,7 @@ func (o *NsOptions) changeCurrentNs() error {
 	return nil
 }
 
-func (o *NsOptions) printNamespaces() error {
+func (o *NsOptions) printNamespaces(namespaces []string) error {
 	red := color.New(color.FgRed)
 
 	if err := o.checkContext(); err != nil {
@@ -174,8 +170,7 @@ func (o *NsOptions) printNamespaces() error {
 	}
 	currentNS := o.rawConfig.Contexts[o.rawConfig.CurrentContext].Namespace
 
-	for _, namespace := range o.namespaces.Items {
-		ns := namespace.GetName()
+	for _, ns := range namespaces {
 		if ns == currentNS {
 			red.Fprintf(o.Out, "%s\n", ns)
 		} else {
