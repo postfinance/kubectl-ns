@@ -46,7 +46,7 @@ type NsOptions struct {
 // NewNsOptions provides an instance of NsOptions with default values
 func NewNsOptions(streams genericclioptions.IOStreams) *NsOptions {
 	return &NsOptions{
-		configFlags: genericclioptions.NewConfigFlags(),
+		configFlags: genericclioptions.NewConfigFlags(true),
 		IOStreams:   streams,
 	}
 }
@@ -170,12 +170,17 @@ func (o *NsOptions) printNamespaces(namespaces []string) error {
 	}
 	currentNS := o.rawConfig.Contexts[o.rawConfig.CurrentContext].Namespace
 
+	current := false
 	for _, ns := range namespaces {
 		if ns == currentNS {
-			red.Fprintf(o.Out, "%s\n", ns)
+			current = true // postpone printing the current namespace
 		} else {
 			fmt.Fprintf(o.Out, "%s\n", ns)
 		}
+	}
+
+	if current {
+		red.Fprintf(o.Out, "%s\n", currentNS)
 	}
 
 	return nil
