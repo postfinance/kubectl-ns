@@ -46,7 +46,7 @@ type NsOptions struct {
 // NewNsOptions provides an instance of NsOptions with default values
 func NewNsOptions(streams genericclioptions.IOStreams) *NsOptions {
 	return &NsOptions{
-		configFlags: genericclioptions.NewConfigFlags(true),
+		configFlags: genericclioptions.NewConfigFlags(),
 		IOStreams:   streams,
 	}
 }
