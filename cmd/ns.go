@@ -7,7 +7,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/kubernetes"
@@ -46,7 +46,7 @@ type NsOptions struct {
 // NewNsOptions provides an instance of NsOptions with default values
 func NewNsOptions(streams genericclioptions.IOStreams) *NsOptions {
 	return &NsOptions{
-		configFlags: genericclioptions.NewConfigFlags(),
+		configFlags: genericclioptions.NewConfigFlags(true),
 		IOStreams:   streams,
 	}
 }
@@ -98,7 +98,7 @@ func (o *NsOptions) Complete(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	namespaces, err := clientset.Core().Namespaces().List(metav1.ListOptions{})
+	namespaces, err := clientset.CoreV1().Namespaces().List(metav1.ListOptions{})
 	if err != nil {
 		return errors.Wrap(err, "failed to get namespaces")
 	}
