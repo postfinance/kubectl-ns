@@ -1,6 +1,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/postfinance/kubectl-ns)](https://goreportcard.com/report/github.com/postfinance/kubectl-ns)
 # kubectl ns plugin
-Simple Plugin to display/change the current kube namespace with support for substring matching.  
+Simple Plugin to display/change the current kube namespace with support for substring matching.
 
 # Build/Installation
 ## Build from source
@@ -10,7 +10,7 @@ export GO111MODULES=on # optional if checked out outside of $GOPATH
 go build
 ```
 ## Installation
-Pre-compiled statically linked binaries are available on the [releases page](https://github.com/postfinance/kubectl-ns/releases).  
+Pre-compiled statically linked binaries are available on the [releases page](https://github.com/postfinance/kubectl-ns/releases).
 Binary must be placed anywhere in `$PATH` named `kubectl-ns` with execute permissions.  
 For further information, see the offical documentation on plugins [here](https://kubernetes.io/docs/tasks/extend-kubectl/kubectl-plugins/).
 
