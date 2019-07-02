@@ -170,12 +170,17 @@ func (o *NsOptions) printNamespaces(namespaces []string) error {
 	}
 	currentNS := o.rawConfig.Contexts[o.rawConfig.CurrentContext].Namespace
 
+	current := false
 	for _, ns := range namespaces {
 		if ns == currentNS {
-			red.Fprintf(o.Out, "%s\n", ns)
+			current = true // postpone printing the current namespace
 		} else {
 			fmt.Fprintf(o.Out, "%s\n", ns)
 		}
+	}
+
+	if current {
+		red.Fprintf(o.Out, "%s\n", currentNS)
 	}
 
 	return nil

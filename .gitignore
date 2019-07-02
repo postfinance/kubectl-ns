@@ -1,2 +1,3 @@
 kubectl-ns
 vendor/
+dist/
