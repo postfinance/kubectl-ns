@@ -5,17 +5,14 @@ import (
 	"strings"
 
 	"github.com/fatih/color"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/kubernetes"
 
-	// These are needed in order to support the authentication methods
-	_ "k8s.io/client-go/plugin/pkg/client/auth/azure"
-	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
-	_ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
+	// needed in order to support all authentication methods
+	_ "k8s.io/client-go/plugin/pkg/client/auth"
 
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/tools/clientcmd/api"
@@ -100,7 +97,7 @@ func (o *NsOptions) Complete(cmd *cobra.Command, args []string) error {
 
 	namespaces, err := clientset.CoreV1().Namespaces().List(metav1.ListOptions{})
 	if err != nil {
-		return errors.Wrap(err, "failed to get namespaces")
+		return fmt.Errorf("failed to get namespaces: %w", err)
 	}
 	o.namespaces = namespaces
 
