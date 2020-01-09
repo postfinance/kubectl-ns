@@ -1,3 +1,4 @@
+[![Build Status](https://img.shields.io/github/workflow/status/postfinance/kubectl-ns/ci?style=for-the-badge)](https://github.com/postfinance/kubectl-ns/actions)
 [![Release](https://img.shields.io/github/release/postfinance/kubectl-ns.svg?style=for-the-badge)](https://github.com/postfinance/kubectl-ns/releases/latest)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=for-the-badge)](/LICENSE.md)
 [![Go Report Card](https://img.shields.io/badge/GOREPORT-A%2B-brightgreen.svg?style=for-the-badge)](https://goreportcard.com/report/github.com/postfinance/kubectl-ns)
