@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"strings"
 
@@ -95,7 +96,7 @@ func (o *NsOptions) Complete(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	namespaces, err := clientset.CoreV1().Namespaces().List(metav1.ListOptions{})
+	namespaces, err := clientset.CoreV1().Namespaces().List(context.Background(), metav1.ListOptions{})
 	if err != nil {
 		return fmt.Errorf("failed to get namespaces: %w", err)
 	}
